@@ -24,9 +24,9 @@ becouse of a apocaliptic event in 2010.Sinse then game has been updated.
 
 
 		Dev
-Step1. Basic movement:walk jump roll-complete
+Step1. Basic movement:walk jump roll  -complete
 Step2. Gunplay, Enemies
-Step3. inventory
+Step3. inventory,
 Step4. Art
 Step5. Checkpoints, Level Design
 Step6. Polish

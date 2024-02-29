@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : Damageble
 {
     public InputActionAsset actions;
     public float Speed;
     public float JumpPower;
     public LayerMask Ground;
     public float Drag;
+    public Ammo PistolAmmo;
+    public Ammo ShotgunAmmo;
+    public Transform GunSpot;
+    public bool HasPistol;
+    public bool HasShotgun;
     public bool Grounded { get { if (Physics2D.Raycast(transform.position, Vector2.down, 2.1f,Ground)) { return true; } return false; } }
     private Rigidbody2D rb;
     private InputAction moveAction;
@@ -104,8 +109,28 @@ public class Player : MonoBehaviour
         }
 
     }
-
-
+    public int GetNeededAmmoCount(BaseGun.AmmoType type)
+    {
+        if(type == BaseGun.AmmoType.bullet)
+        {
+            return PistolAmmo.count;
+        }
+        else
+        {
+            return ShotgunAmmo.count;
+        }
+    }
+    public void WriteNeededAmmoCount(BaseGun.AmmoType type,int count)
+    {
+        if (type == BaseGun.AmmoType.bullet)
+        {
+            PistolAmmo = new Ammo(count, PistolAmmo.type);
+        }
+        else
+        {
+            ShotgunAmmo = new Ammo(count, ShotgunAmmo.type);
+        }
+    }
     void OnEnable()
     {
         actions.FindActionMap("MoveMent").Enable();
@@ -113,5 +138,10 @@ public class Player : MonoBehaviour
     void OnDisable()
     {
         actions.FindActionMap("MoveMent").Disable();
+    }
+
+    public override void Die()
+    {
+        
     }
 }
