@@ -17,13 +17,13 @@ public class ItemScript : MonoBehaviour
         {
             if (!IsInInventory)
             {
-                GetComponent<SpriteRenderer>().sprite = Data.WorldIcon;
+                transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Data.WorldIcon;
                 transform.localScale = Data.WorldSize;
                 GetComponent<BoxCollider2D>().size = Data.TriggerSize;
             }
             else
             {
-                GetComponent<SpriteRenderer>().sprite = Data.InventoryIcon;
+                //transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = Data.InventoryIcon;
                 Destroy(gameObject);
             }
         }
@@ -38,6 +38,8 @@ public class ItemScript : MonoBehaviour
             IsInInventory = true;
             if (Data.CollectItemOnPickup)
                 pl.Items.Add(Data);
+            if (Data.OnPickupMethodName != "")
+                pl.Invoke(Data.OnPickupMethodName, 0);
             LoadData();
         }
     }
@@ -59,15 +61,3 @@ public class ItemScript : MonoBehaviour
     }
 }
 
-[CreateAssetMenu(fileName = "Item", menuName = "ItemAsset", order = 1)]
-public class Item : ScriptableObject
-{
-    public string Name;
-    public string OnUseMethodName;
-    public Sprite InventoryIcon;
-    public Sprite WorldIcon;
-    public Vector2 WorldSize;
-    public Vector2 UISize;
-    public Vector2 TriggerSize;
-    public bool CollectItemOnPickup;
-}

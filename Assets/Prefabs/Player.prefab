@@ -238,7 +238,7 @@ MonoBehaviour:
   weapon: 1
   Items: []
   InventoryElement: {fileID: 0}
-  IsInIntro: 0
+  IsInIntro: 1
 --- !u!1 &5750940013063356371
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class Player : Damageble
 {
@@ -31,6 +32,9 @@ public class Player : Damageble
     private UIElement currentUIElement;
     public UIElement InventoryElement;
     public bool IsInIntro;
+    public bool IsInDialoge;
+    public int Coins;
+    public CinemachineVirtualCamera Camera;
     void Awake()
     {
         actions.FindActionMap("MoveMent").FindAction("Jump").performed += OnJump;
@@ -52,6 +56,7 @@ public class Player : Damageble
         {
             StartCoroutine(DoRoll(0.5f, transform.position, transform.position + transform.right * 3,true));
         }
+        CoinCounter.Singleton.LoadCoinData();
     }
     public void FixedUpdate()
     {
@@ -119,6 +124,7 @@ public class Player : Damageble
     } //coolest one
     public void OnTab(InputAction.CallbackContext obj)
     {
+        if (IsInDialoge) return;
         var e =GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Inventory").GetComponent<UIElement>();
         if(currentUIElement == e)
         {
@@ -141,6 +147,15 @@ public class Player : Damageble
             currentUIElement.CloseElement();
         }
         
+
+    }
+    public void PickupACoin()
+    {
+        Coins++;
+        CoinCounter.Singleton.LoadCoinData();
+    }
+    public void DisplayA()
+    {
 
     }
     public void OnRoll(InputAction.CallbackContext context)
@@ -181,7 +196,7 @@ public class Player : Damageble
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (Grounded && canJump&&!IsInRoll)
+        if (Grounded && canJump&&!IsInRoll&&!IsInDialoge)
         {
             canJump = false;
             Invoke(nameof(ResetJump), 0.8f);
@@ -192,7 +207,7 @@ public class Player : Damageble
 
     public void OnWalk(Vector2 wasd)
     {
-        if (IsInRoll) return;
+        if (IsInRoll || IsInDialoge) return;
         Vector2 flatwasd = new Vector2(wasd.x, 0);
         if (Grounded)
         {
@@ -235,6 +250,7 @@ public class Player : Damageble
     void OnEnable()
     {
         actions.FindActionMap("MoveMent").Enable();
+        actions.FindActionMap("GunPlay").Enable();
         actions.FindActionMap("UI").Enable();
     }
     void OnDisable()

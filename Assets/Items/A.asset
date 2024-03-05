@@ -9,14 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: LetterA
-  m_EditorClassIdentifier: Assembly-CSharp::Item
+  m_Script: {fileID: 11500000, guid: 6c3cae56caf7d444eac24069429c4896, type: 3}
+  m_Name: A
+  m_EditorClassIdentifier: 
   Name: LetterA
   OnUseMethodName: 
-  InventoryIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  WorldIcon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
-  WorldSize: {x: 5, y: 5}
+  OnPickupMethodName: DisplayA
+  InventoryIcon: {fileID: 0}
+  WorldIcon: {fileID: -1859569118, guid: 8fe6299dbf1ac5043a03474eb5eaf48a, type: 3}
+  WorldSize: {x: 1, y: 1}
   UISize: {x: 1, y: 1}
-  TriggerSize: {x: 0.1, y: 0.1}
+  TriggerSize: {x: 1, y: 1}
   CollectItemOnPickup: 0
