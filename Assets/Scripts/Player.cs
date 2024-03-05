@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,28 +16,100 @@ public class Player : Damageble
     public Transform GunSpot;
     public bool HasPistol;
     public bool HasShotgun;
-    public bool Grounded { get { if (Physics2D.Raycast(transform.position, Vector2.down, 2.1f,Ground)) { return true; } return false; } }
+    public bool Grounded { get { if (Physics2D.Raycast(transform.position, Vector2.down, 1.15f,Ground)) { return true; } return false; } }
     private Rigidbody2D rb;
     private InputAction moveAction;
     private bool canJump = true;
     private bool canRoll = true;
     public bool IsInRoll;
+    public BaseGun Magnum;
+    public BaseGun Shotgun;
+    public int weapon;
+    public List<Item> Items = new List<Item>();
+    private static bool _showcursor;
+    public static bool ShowCursor { get { return Player._showcursor; } set { Player._showcursor = value; if (value) { Cursor.visible = value; Cursor.lockState = CursorLockMode.None; } else { Cursor.visible = false; Cursor.lockState = CursorLockMode.Confined; } } }
+    private UIElement currentUIElement;
+    public UIElement InventoryElement;
+    public bool IsInIntro;
     void Awake()
     {
         actions.FindActionMap("MoveMent").FindAction("Jump").performed += OnJump;
         actions.FindActionMap("MoveMent").FindAction("Roll").performed += OnRoll;
+        actions.FindActionMap("UI").FindAction("Close").performed += OnEsc;
+        actions.FindActionMap("UI").FindAction("Inventory").performed += OnTab;
         moveAction = actions.FindActionMap("MoveMent").FindAction("WASD");
     }
+
+
+
     public void ResetJump() { canJump = true; }
     public void ResetRoll() { canRoll = true; }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
+        if (IsInIntro)
+        {
+            StartCoroutine(DoRoll(0.5f, transform.position, transform.position + transform.right * 3,true));
+        }
     }
     public void FixedUpdate()
     {
         OnWalk(moveAction.ReadValue<Vector2>());
+        
+        
+    }
+    private void Update()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f)
+        {
+            if (weapon == 2)
+            {
+                weapon = 1;
+                SwitchWeapon();
+            }
+            else
+            {
+                weapon++;
+                SwitchWeapon();
+            }
+        }
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f)
+        {
+            if (weapon == 1)
+            {
+                weapon = 2;
+                SwitchWeapon();
+            }
+            else
+            {
+                weapon--;
+                SwitchWeapon();
+            }
+        }
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            weapon = 1;
+            SwitchWeapon();
+        }
+        if (Input.GetKey(KeyCode.Alpha2))
+        {
+            weapon = 2;
+            SwitchWeapon();
+        }
+    }
+    public void SwitchWeapon()
+    {
+        if(weapon == 1&&HasPistol)
+        {
+            Magnum.gameObject.SetActive(true);
+            Shotgun.gameObject.SetActive(false);
+        }
+        if (weapon == 2 && HasShotgun)
+        {
+            Magnum.gameObject.SetActive(false);
+            Shotgun.gameObject.SetActive(true);
+        }
     }
     public static float InQuint(float t) => t * t * t * t * t;
     public static float InOutQuint(float t)
@@ -44,6 +117,32 @@ public class Player : Damageble
         if (t < 0.5) return InQuint(t * 2) / 2;
         return 1 - InQuint((1 - t) * 2) / 2;
     } //coolest one
+    public void OnTab(InputAction.CallbackContext obj)
+    {
+        var e =GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Inventory").GetComponent<UIElement>();
+        if(currentUIElement == e)
+        {
+            e.CloseElement();
+            currentUIElement = null;
+        }
+        else if(currentUIElement == null)
+        {
+            currentUIElement = e;
+            e.OpenElement();
+
+        }
+        
+    }
+    public void OnEsc(InputAction.CallbackContext context)
+    {
+        if (currentUIElement)
+        {
+
+            currentUIElement.CloseElement();
+        }
+        
+
+    }
     public void OnRoll(InputAction.CallbackContext context)
     {
         if (canRoll && Grounded)
@@ -57,7 +156,7 @@ public class Player : Damageble
             {
                 telepos = hit.point;
             }
-            StartCoroutine(DoRoll(2, transform.position, telepos));
+            StartCoroutine(DoRoll(2, transform.position, telepos,false));
 
             IsInRoll = true;
             canRoll = false;
@@ -65,7 +164,7 @@ public class Player : Damageble
             
         }
     }
-    public IEnumerator DoRoll(float speed,Vector2 initpos,Vector2 telepos)
+    public IEnumerator DoRoll(float speed,Vector2 initpos,Vector2 telepos,bool IsIntro)
     {
         float time = 0;
         while (time < 1)
@@ -77,6 +176,8 @@ public class Player : Damageble
             yield return null;
         }
         IsInRoll = false;
+        if (IsIntro)
+            IsInIntro = false;
     }
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -134,6 +235,7 @@ public class Player : Damageble
     void OnEnable()
     {
         actions.FindActionMap("MoveMent").Enable();
+        actions.FindActionMap("UI").Enable();
     }
     void OnDisable()
     {
@@ -145,3 +247,4 @@ public class Player : Damageble
         
     }
 }
+

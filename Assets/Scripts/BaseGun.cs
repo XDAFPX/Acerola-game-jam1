@@ -18,6 +18,7 @@ public abstract class BaseGun : MonoBehaviour
     public LayerMask WhatToHit;
     public InputActionAsset Actions;
     public bool IsActive = true;
+    private InputAction fireinput;
     public enum AmmoType
     {
         _default,
@@ -27,11 +28,15 @@ public abstract class BaseGun : MonoBehaviour
     private void Update()
     {
         if(owner && IsActive )
-            LookAtCursor();   
+            LookAtCursor();
+        if(fireinput.ReadValue<float>() == 1)
+        {
+            TryFire();
+        }
     }
     private void Start()
     {
-        Actions.FindActionMap("GunPlay").FindAction("Fire").performed += TryFire;
+        fireinput = Actions.FindActionMap("GunPlay").FindAction("Fire");
     }
 
 
@@ -49,7 +54,7 @@ public abstract class BaseGun : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, angleDegrees);
     }
 
-    public void TryFire(InputAction.CallbackContext context)
+    public void TryFire()
     {
         if (!owner && !IsActive) return;
         if(CurrentAmmo >= 1)
@@ -66,10 +71,14 @@ public abstract class BaseGun : MonoBehaviour
         {
             if (owner.GetNeededAmmoCount(_AmmoType) >= MaxAmmo && canShoot)
             {
-                StartCoroutine(Reload());
+                StartCoroutine(Reload(MaxAmmo));
             }
-            else
+            else if(owner.GetNeededAmmoCount(_AmmoType) ==0)
                 TriggerNoAmmo();
+            else if (canShoot)
+            {
+                StartCoroutine(Reload(owner.GetNeededAmmoCount(_AmmoType)));
+            }
         }
     }
     public abstract void Fire();
@@ -80,14 +89,14 @@ public abstract class BaseGun : MonoBehaviour
         yield return new WaitForSeconds(TimeBeetwenBullets);
         canShoot = true;
     }
-    public IEnumerator Reload()
+    public IEnumerator Reload(int ammoamount)
     {
         canShoot = false;
         TriggerOnReload();
         yield return new WaitForSeconds(ReloadTime);
         
-        owner.WriteNeededAmmoCount(_AmmoType, owner.GetNeededAmmoCount(_AmmoType) - MaxAmmo);
-        CurrentAmmo = MaxAmmo;
+        owner.WriteNeededAmmoCount(_AmmoType, owner.GetNeededAmmoCount(_AmmoType) - ammoamount);
+        CurrentAmmo = ammoamount;
         TriggerAfterReload();
         canShoot = true;
     }
