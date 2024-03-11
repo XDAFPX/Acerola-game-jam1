@@ -14,4 +14,5 @@ public class Item : ScriptableObject
     public Vector2 UISize;
     public Vector2 TriggerSize;
     public bool CollectItemOnPickup;
+    public bool ISSPECIAL;
 }

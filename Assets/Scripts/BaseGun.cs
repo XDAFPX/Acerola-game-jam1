@@ -37,6 +37,7 @@ public abstract class BaseGun : MonoBehaviour
     private void Start()
     {
         fireinput = Actions.FindActionMap("GunPlay").FindAction("Fire");
+        AmmoUI.Singleton.UpdateAmmo(CurrentAmmo, MaxAmmo, owner.GetNeededAmmoCount(_AmmoType));
     }
 
 
@@ -51,17 +52,19 @@ public abstract class BaseGun : MonoBehaviour
         float angleRadians = Mathf.Atan2(dir.y, dir.x);
         // Convert the angle from radians to degrees and apply it to the Z rotation
         float angleDegrees = Mathf.Rad2Deg * angleRadians;
-        transform.rotation = Quaternion.Euler(0f, 0f, angleDegrees);
+        transform.parent.rotation = Quaternion.Euler(0f, 0f, angleDegrees);
     }
 
     public void TryFire()
     {
         if (!owner && !IsActive) return;
+        if (owner.IsDead||Player.ShowCursor) return;
         if(CurrentAmmo >= 1)
         {
             if (canShoot)
             {
                 Mathf.Clamp(CurrentAmmo--, 0, 1000);
+                AmmoUI.Singleton.UpdateAmmo(CurrentAmmo, MaxAmmo, owner.GetNeededAmmoCount(_AmmoType));
                 Fire();
                 StartCoroutine(TimeBetweenShots());
             }
@@ -91,12 +94,14 @@ public abstract class BaseGun : MonoBehaviour
     }
     public IEnumerator Reload(int ammoamount)
     {
+        AmmoUI.Singleton.UpdateAmmo(CurrentAmmo, MaxAmmo, owner.GetNeededAmmoCount(_AmmoType));
         canShoot = false;
         TriggerOnReload();
         yield return new WaitForSeconds(ReloadTime);
         
         owner.WriteNeededAmmoCount(_AmmoType, owner.GetNeededAmmoCount(_AmmoType) - ammoamount);
         CurrentAmmo = ammoamount;
+        AmmoUI.Singleton.UpdateAmmo(CurrentAmmo, MaxAmmo, owner.GetNeededAmmoCount(_AmmoType));
         TriggerAfterReload();
         canShoot = true;
     }

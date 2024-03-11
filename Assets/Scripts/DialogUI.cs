@@ -16,11 +16,11 @@ public class DialogUI : MonoBehaviour
     private float Speed;
     public Dialogtrigger IsinDialog = null;
     public int SenteceIndex;
-    
+    private bool readbywords;
 
-    public void LoadData(string[] senteces,string name,float speed)
+    public void LoadData(string[] senteces,string name,float speed,bool readby)
     {
-        Senteces = senteces; Name = name; Speed = speed;
+        Senteces = senteces; Name = name; Speed = speed; readbywords = readby;
     }
     public void DisposeData()
     {
@@ -38,8 +38,10 @@ public class DialogUI : MonoBehaviour
             StopAllCoroutines();
             if (SenteceIndex == Senteces.Length)
             {
-                IsinDialog = null; SetPlayerInDialog(); DisposeData();
-                GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Camera.Follow = GameObject.FindGameObjectWithTag("Player").transform; return;
+
+                IsinDialog = null; SetPlayerInDialog(); DisposeData(); brodcaster.ProgressDialog(brodcaster.Dialogs[brodcaster.DialogProgresion].dialogprogresion);
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Camera.Follow = GameObject.FindGameObjectWithTag("Player").transform; brodcaster.OnDialogFinish.Invoke();
+                return;
             }
 
 
@@ -50,7 +52,7 @@ public class DialogUI : MonoBehaviour
         }
         else
         {
-            LoadData(brodcaster.Senteces, brodcaster.Name, brodcaster.TimePerCharacter);
+            LoadData(brodcaster.Dialogs[brodcaster.DialogProgresion].Senteces, brodcaster.Dialogs[brodcaster.DialogProgresion].Name, brodcaster.Dialogs[brodcaster.DialogProgresion].TimePerCharacter,brodcaster.Dialogs[brodcaster.DialogProgresion].ReadByWords);
             SenteceIndex = 0;
             StartCoroutine(PrintString(Senteces[SenteceIndex]));
             Mathf.Clamp(SenteceIndex++, 0, Senteces.Length);
@@ -69,11 +71,24 @@ public class DialogUI : MonoBehaviour
     public IEnumerator PrintString(string s)
     {
         MainTMP.text = "";
-        for (int i = 0; i < s.Length; i++)
+        if (!readbywords)
         {
-            yield return new WaitForSeconds(Speed);
-            MainTMP.text += s[i];
+            for (int i = 0; i < s.Length; i++)
+            {
+                yield return new WaitForSeconds(Speed);
+                MainTMP.text += s[i];
+            }
         }
+        else
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if(s[i]==' ')
+                    yield return new WaitForSeconds(Speed);
+                MainTMP.text += s[i];
+            }
+        }
+        
     }
     public void SetPlayerInDialog()
     {

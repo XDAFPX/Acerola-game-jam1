@@ -33,7 +33,7 @@ public class ItemScript : MonoBehaviour
         if (IsInReach && !IsInInventory)
         {
             Player pl = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-            if (PickupParticle)
+            if (PickupParticle&&UnityEngine.SceneManagement.SceneManager.GetActiveScene().name=="P1_a1")
                 Instantiate(PickupParticle, transform.position, Quaternion.identity);
             IsInInventory = true;
             if (Data.CollectItemOnPickup)

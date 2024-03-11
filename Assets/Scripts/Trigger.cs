@@ -7,43 +7,51 @@ public class Trigger : MonoBehaviour
 {
     public bool IsCollisonBased;
     public bool IsTriggerBased = true;
-    public UnityEvent Events;
-    public bool TriggerOnExit;
+    public UnityEvent OnEnter;
+    public UnityEvent OnExit;
+    public bool TriggerOnExit = true;
     public bool TriggerOnEnter = true;
     public bool TriggerOnes;
+    public string Triggerebletag;
     private bool IsTriggered = false;
 
+    public void TriggerEneter()
+    {
+        OnEnter.Invoke();
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (IsCollisonBased && TriggerOnEnter && !IsTriggered )
+        if (IsCollisonBased && TriggerOnEnter && !IsTriggered && (collision.collider.gameObject.tag == Triggerebletag))
         {
-            Events.Invoke();
+            OnEnter.Invoke();
+            if (TriggerOnes && !IsTriggered) IsTriggered = true;
         }
-        if (TriggerOnes&&!IsTriggered) IsTriggered = true;
+
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (IsCollisonBased && TriggerOnExit && !IsTriggered)
+        if (IsCollisonBased && TriggerOnExit && !IsTriggered && (collision.collider.gameObject.tag == Triggerebletag))
         {
-            Events.Invoke();
+            OnExit.Invoke();
+            if (TriggerOnes && !IsTriggered) IsTriggered = true;
         }
-        if (TriggerOnes && !IsTriggered) IsTriggered = true;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (IsTriggerBased && TriggerOnEnter && !IsTriggered)
+        if (IsTriggerBased && TriggerOnEnter && !IsTriggered && (collision.gameObject.tag == Triggerebletag))
         {
-            Events.Invoke();
+            OnEnter.Invoke();
+            if (TriggerOnes && !IsTriggered) IsTriggered = true;
         }
-        if (TriggerOnes && !IsTriggered) IsTriggered = true;
+
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (IsTriggerBased && TriggerOnExit && !IsTriggered)
+        if (IsTriggerBased && TriggerOnExit && !IsTriggered && (collision.gameObject.tag == Triggerebletag))
         {
-            Events.Invoke();
+            OnExit.Invoke();
+            if (TriggerOnes && !IsTriggered) IsTriggered = true;
         }
-        if (TriggerOnes && !IsTriggered) IsTriggered = true;
     }
 
 }

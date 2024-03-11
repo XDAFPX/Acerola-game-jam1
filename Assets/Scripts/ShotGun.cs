@@ -9,7 +9,8 @@ public class ShotGun : BaseGun
     public int Shots;
     public override void Fire()
     {
-
+        CameraShaker.Singleton.StartShake(7, 0.5f, 0.1f);
+        GetComponent<Animator>().Play("ShotgunIdle", 0, 0);
         for (int i = 0; i < Shots; i++)
         {
             Vector3 right = new Vector2(transform.right.x + Random.Range(-ScaterValue, ScaterValue), transform.right.y + Random.Range(-ScaterValue, ScaterValue));
@@ -47,5 +48,16 @@ public class ShotGun : BaseGun
             yield return null;
         }
         Destroy(tr.gameObject);
+    }
+    public override void TriggerOnReload()
+    {
+        GetComponent<Animator>().Play("ShotgunReload");
+        owner.CanSwitchWeapons = false;
+        base.TriggerOnReload();
+    }
+    public override void TriggerAfterReload()
+    {
+        owner.CanSwitchWeapons = true;
+        base.TriggerAfterReload();
     }
 }

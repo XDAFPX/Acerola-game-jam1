@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c3cae56caf7d444eac24069429c4896, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: 
+  Name: Shotgun
+  OnUseMethodName: 
+  OnPickupMethodName: PickupShotgun
+  InventoryIcon: {fileID: -1212051339, guid: 4d43c5b60ed56784c942849f4ee53523, type: 3}
+  WorldIcon: {fileID: -1212051339, guid: 4d43c5b60ed56784c942849f4ee53523, type: 3}
+  WorldSize: {x: -0.4, y: 0.4}
+  UISize: {x: 0, y: 0}
+  TriggerSize: {x: 0.4, y: 0.4}
+  CollectItemOnPickup: 0
+  ISSPECIAL: 0

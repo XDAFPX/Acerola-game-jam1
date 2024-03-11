@@ -20,4 +20,4 @@ MonoBehaviour:
   WorldSize: {x: 1, y: 1}
   UISize: {x: 1, y: 1}
   TriggerSize: {x: 1, y: 1}
-  CollectItemOnPickup: 0
+  CollectItemOnPickup: 1

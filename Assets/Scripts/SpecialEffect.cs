@@ -7,7 +7,10 @@ public class SpecialEffect : MonoBehaviour
     public float TimeBeforeDestroy;
     void Start()
     {
-        Destroy(gameObject, TimeBeforeDestroy);
+        Invoke("Delete", TimeBeforeDestroy);
     }
-
+    public void Delete()
+    {
+        Destroy(gameObject);
+    }
 }

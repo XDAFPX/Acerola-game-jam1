@@ -17,15 +17,20 @@ public class UIItem : MonoBehaviour
         {
             GetComponent<Image>().sprite = Data.InventoryIcon;
             transform.localScale = Data.UISize;
+            transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = Data.Name;
         }
     }
     public void CLick()
     {
         if(Data.OnUseMethodName != "")
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Invoke(Data.OnUseMethodName, 0);
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Items.RemoveAt(Index);
-            Destroy(gameObject);
+            var pl = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+            if (pl.Items.Count>Index)
+            {
+                pl.Invoke(Data.OnUseMethodName, 0);
+                pl.Items.RemoveAt(Index);
+            }
+            Destroy(this.gameObject);
         }
         
     }
