@@ -176,6 +176,20 @@ public class Player : Damageble
                 SaveNLoadManager.Singleton.Load();
             else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentUIElement)
+            {
+
+                currentUIElement.CloseElement();
+            }
+            else
+            {
+                //Debug.Log(GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.activeInHierarchy);
+                ShowCursor = !ShowCursor;
+                GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.SetActive(!GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.activeInHierarchy);
+            }
+        }
     }
     public void SwitchWeapon()
     {
@@ -217,16 +231,7 @@ public class Player : Damageble
     }
     public void OnEsc(InputAction.CallbackContext context)
     {
-        if (currentUIElement)
-        {
-
-            currentUIElement.CloseElement();
-        }
-        else
-        {
-            ShowCursor = !ShowCursor;
-            GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.SetActive(!GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.activeInHierarchy);
-        }
+        
 
     }
     public void RevolverAmmoPickup()
