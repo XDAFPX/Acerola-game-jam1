@@ -18,7 +18,8 @@ public abstract class BaseGun : MonoBehaviour
     public LayerMask WhatToHit;
     public InputActionAsset Actions;
     public bool IsActive = true;
-    private InputAction fireinput;
+    private InputAction fireinput; public AudioClip FireSound;
+    public float preferebledir =1 ;
     public enum AmmoType
     {
         _default,
@@ -53,18 +54,21 @@ public abstract class BaseGun : MonoBehaviour
         // Convert the angle from radians to degrees and apply it to the Z rotation
         float angleDegrees = Mathf.Rad2Deg * angleRadians;
         transform.parent.rotation = Quaternion.Euler(0f, 0f, angleDegrees);
+        if (angleDegrees <= 90 && angleDegrees >= -90) preferebledir = 1;
+        else preferebledir = -1;
     }
 
     public void TryFire()
     {
         if (!owner && !IsActive) return;
-        if (owner.IsDead||Player.ShowCursor) return;
+        if (owner.IsDead||Player.ShowCursor||owner.IsInDialoge) return;
         if(CurrentAmmo >= 1)
         {
             if (canShoot)
             {
                 Mathf.Clamp(CurrentAmmo--, 0, 1000);
                 AmmoUI.Singleton.UpdateAmmo(CurrentAmmo, MaxAmmo, owner.GetNeededAmmoCount(_AmmoType));
+                GetComponent<AudioSource>().PlayOneShot(FireSound);
                 Fire();
                 StartCoroutine(TimeBetweenShots());
             }

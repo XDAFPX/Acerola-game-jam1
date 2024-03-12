@@ -2268,7 +2268,7 @@ TextureImporter:
         width: 48
         height: 47
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -2289,7 +2289,7 @@ TextureImporter:
         width: 40
         height: 77
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -2297,6 +2297,48 @@ TextureImporter:
       bones: []
       spriteID: d7d41b3e7bbb3134385349b7f3aa1d2b
       internalID: -199065426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigundulo
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 32
+        width: 39
+        height: 14
+      alignment: 9
+      pivot: {x: 0.89794964, y: 0.48220524}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b88ecda2cb7fe746b912968c88d909e
+      internalID: -1793523355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minigunbullet
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 11
+        width: 15
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d42ccd2ba7d6f148b567f603506fceb
+      internalID: 51652817
       vertices: []
       indices: 
       edges: []
@@ -2317,6 +2359,8 @@ TextureImporter:
       Hand1: 1514002684
       Hand2: -199065426
       Head: 1947244116
+      Minigunbullet: 51652817
+      Minigundulo: -1793523355
       Wire1: -991066817
       Wire12: -108025592
       Wire13: -139172280

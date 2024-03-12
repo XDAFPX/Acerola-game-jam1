@@ -7,7 +7,14 @@ public class TriggerSceneLoad : MonoBehaviour
 {
     public void Load(string scene)
     {
-        SceneManager.LoadScene(scene);
+        if(scene != "Menu")
+            SceneManager.LoadScene(scene);
+        else
+        {
+            if (SaveNLoadManager.Singleton != null) Destroy(SaveNLoadManager.Singleton);
+            SceneManager.LoadScene(scene);
+        }
+
     }
 
     public void TransitionToNextStage(int stage)

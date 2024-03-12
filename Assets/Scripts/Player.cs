@@ -19,7 +19,7 @@ public class Player : Damageble
     public bool HasPistol;
     public bool HasShotgun;
     public bool HasGasMask;
-    public bool Grounded { get { if (transform == null) return false; if (Physics2D.BoxCast(transform.position, new Vector2(1,1f),0,Vector2.down,1f,Ground)) { return true; } return false; } }
+    public bool Grounded { get { if (this == null) return false; if (Physics2D.BoxCast(transform.position, new Vector2(1,1f),0,Vector2.down,1f,Ground)) { return true; } return false; } }
     [HideInInspector]public Rigidbody2D rb;
     private InputAction moveAction;
     private bool canJump = true;
@@ -43,6 +43,8 @@ public class Player : Damageble
     public Transform[] StepingRaySpots;
     public float SteppingJump = 0.125f;
     [HideInInspector] public bool CanSwitchWeapons = true;
+    [HideInInspector]public Animator grapchics;
+    [HideInInspector] public BaseGun Activegun;
     public bool IsStendingOnSlipperyFloor { get { return (Physics2D.BoxCast(transform.position, new Vector2(1, 1f), 0, Vector2.down, 1f, Ground).collider.tag == "Slippery"); } }
     void Awake()
     {
@@ -57,6 +59,7 @@ public class Player : Damageble
 
     private void WalkPerfarmed(InputAction.CallbackContext obj)
     {
+
         if(IsInBallPit)
             SpawnBallPitParticle();
     }
@@ -74,6 +77,7 @@ public class Player : Damageble
     {
         ShowCursor = false;
         rb = GetComponent<Rigidbody2D>();
+        grapchics = transform.GetChild(0).GetChild(0).GetComponent<Animator>();
         CanSwitchWeapons = true;
         if (IsInIntro)
         {
@@ -84,7 +88,7 @@ public class Player : Damageble
     public void FixedUpdate()
     {
         OnWalk(moveAction.ReadValue<Vector2>());
-
+        grapchics.SetBool("IsGrounded", Grounded);
 
     }
     public override void HealDamage(float value)
@@ -168,7 +172,9 @@ public class Player : Damageble
         }
         if (Input.anyKeyDown&&IsDead)
         {
-            SaveNLoadManager.Singleton.Load();
+            if (SaveNLoadManager.Singleton != null)
+                SaveNLoadManager.Singleton.Load();
+            else SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
     public void SwitchWeapon()
@@ -176,12 +182,14 @@ public class Player : Damageble
         if(weapon == 1&&HasPistol&CanSwitchWeapons)
         {
             Magnum.gameObject.SetActive(true);
+            Activegun = Magnum;
             Shotgun.gameObject.SetActive(false);
         }
         if (weapon == 2 && HasShotgun&&CanSwitchWeapons)
         {
             Magnum.gameObject.SetActive(false);
             Shotgun.gameObject.SetActive(true);
+            Activegun = Shotgun;
         }
     }
     public static float InQuint(float t) => t * t * t * t * t;
@@ -214,7 +222,11 @@ public class Player : Damageble
 
             currentUIElement.CloseElement();
         }
-        
+        else
+        {
+            ShowCursor = !ShowCursor;
+            GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.SetActive(!GameObject.FindGameObjectWithTag("MainCanvas").transform.Find("Menu").gameObject.activeInHierarchy);
+        }
 
     }
     public void RevolverAmmoPickup()
@@ -288,6 +300,7 @@ public class Player : Damageble
     }
     public IEnumerator DoRoll(float speed,Vector2 initpos,Vector2 telepos,bool IsIntro)
     {
+        grapchics.Play("BodyRoll");
         float time = 0;
 
         while (time < 1)
@@ -309,6 +322,7 @@ public class Player : Damageble
         if (this == null) return;
         if (Grounded && canJump&&!IsInRoll&&!IsInDialoge&&!IsDead)
         {
+            grapchics.Play("BodyJump");
             if (IsInBallPit)
                 SpawnBallPitParticle();
             else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "P1_a1")
@@ -325,6 +339,23 @@ public class Player : Damageble
 
     public void OnWalk(Vector2 wasd)
     {
+        float wdir = 1;
+        if (wasd.x > 0) wdir=1;
+        if (wasd.x < 0) wdir=-1;
+        float scalex;
+        if (Activegun == null)
+            scalex = wdir;
+        else
+        {
+            if (wdir == Activegun.preferebledir)
+                scalex = wdir;
+            else
+            {
+                scalex = Activegun.preferebledir;
+            }
+        }
+        grapchics.transform.parent.localScale = new Vector3(scalex, 1, 1);
+
         if (IsInRoll || IsInDialoge || IsDead) return;
         Vector2 flatwasd = new Vector2(wasd.x, 0);
         if (Grounded)
@@ -341,6 +372,7 @@ public class Player : Damageble
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
         }
+        grapchics.SetBool("IsRunning", (flatwasd.x != 0));
         TryStep(flatwasd);
         if(Mathf.Abs(rb.velocity.x) > Speed+20)
         {

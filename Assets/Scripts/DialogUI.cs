@@ -59,7 +59,8 @@ public class DialogUI : MonoBehaviour
             IsinDialog = brodcaster;
             SetPlayerInDialog();
             NameTMP.text = Name;
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Camera.Follow = brodcaster.transform;
+            if(brodcaster!=null)
+                GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Camera.Follow = brodcaster.transform;
         }
     }
     public void StopDialog()

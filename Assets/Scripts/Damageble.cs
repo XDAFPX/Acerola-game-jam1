@@ -11,7 +11,7 @@ public abstract class Damageble : MonoBehaviour
     public virtual void TakeDamage(float value)
     {
         if(!IsImmortal)
-           Hp =  Mathf.Clamp( Hp - value,0,1000);
+           Hp =  Mathf.Clamp( Hp - value,0,100000);
         if (Hp == 0)
         {
             IsDead = true;

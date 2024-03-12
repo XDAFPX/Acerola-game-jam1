@@ -5,6 +5,18 @@ using UnityEngine;
 public class Pistol : BaseGun
 {
     public Transform Bullet;
+    private void OnEnable()
+    {
+        owner.grapchics.transform.Find("arm2").localRotation = Quaternion.Euler(0, 0, 76);
+        owner.grapchics.transform.Find("arm2").localPosition= new Vector3(-0.06f, -0.39f,0);
+        owner.grapchics.transform.Find("arm2").GetComponent<SpriteRenderer>().sortingOrder = 3;
+    }
+    private void OnDisable()
+    {
+        owner.grapchics.transform.Find("arm2").localRotation = Quaternion.Euler(0, 0, 0);
+        owner.grapchics.transform.Find("arm2").localPosition = new Vector3(-0.5f, -0.458f, 0);
+        owner.grapchics.transform.Find("arm2").GetComponent<SpriteRenderer>().sortingOrder = -3;
+    }
     public override void Fire()
     {
         CameraShaker.Singleton.StartShake(4, 0.5f, 0.1f);
@@ -16,16 +28,35 @@ public class Pistol : BaseGun
         if (hit)
         {
 
-            if (hit.transform.TryGetComponent(out Damageble damageble))
+            if (FindLastPerent(hit.transform).TryGetComponent(out Damageble damageble))
             {
                 damageble.TakeDamage(Damage);
             }
+
             endpos = hit.point;
         }
         else
             endpos = FireSpot.position + transform.right * 40;
         StartCoroutine(ShootBullet(7, FireSpot.position, endpos, bullet));
     }
+
+    public static  Transform FindLastPerent(Transform child)
+    {
+        bool foundperrent = true;
+        Transform nchild = child;
+        while (foundperrent)
+        {
+            Transform tchild = nchild;
+            nchild = nchild.parent;
+            if(nchild == null)
+            {
+                foundperrent = true;
+                return tchild;
+            }
+        }
+        return child;
+    }
+
     private void FixedUpdate()
     {
         IsActive = owner.HasPistol;

@@ -7,6 +7,25 @@ public class ShotGun : BaseGun
     public Transform Bullet;
     public float ScaterValue;
     public int Shots;
+    private void OnEnable()
+    {
+        owner.grapchics.transform.Find("arm1").localPosition = new Vector3(0.73f, -0.287f, 0);
+        owner.grapchics.transform.Find("arm1").localRotation = Quaternion.Euler(0, 0, 34.902f);
+        owner.grapchics.transform.Find("arm2").localRotation = Quaternion.Euler(0, 0, 44.16f);
+        owner.grapchics.transform.Find("arm2").localPosition = new Vector3(-0.31f, -0.55f, 0);
+        owner.grapchics.transform.Find("arm2").GetComponent<SpriteRenderer>().sortingOrder = 3;
+        owner.grapchics.transform.Find("arm1").GetComponent<SpriteRenderer>().sortingOrder = -3;
+    }
+
+    private void OnDisable()
+    {
+        owner.grapchics.transform.Find("arm1").localPosition =new  Vector3(0.48f, -0.44f, 0);
+        owner.grapchics.transform.Find("arm1").localRotation = Quaternion.Euler(0, 0, 0);
+        owner.grapchics.transform.Find("arm2").localRotation = Quaternion.Euler(0, 0, 0);
+        owner.grapchics.transform.Find("arm2").localPosition = new Vector3(-0.5f, -0.458f, 0);
+        owner.grapchics.transform.Find("arm2").GetComponent<SpriteRenderer>().sortingOrder = -3;
+        owner.grapchics.transform.Find("arm1").GetComponent<SpriteRenderer>().sortingOrder = -3;
+    }
     public override void Fire()
     {
         CameraShaker.Singleton.StartShake(7, 0.5f, 0.1f);
@@ -21,7 +40,7 @@ public class ShotGun : BaseGun
             if (hit)
             {
 
-                if (hit.transform.TryGetComponent(out Damageble damageble))
+                if (Pistol.FindLastPerent(hit.transform).TryGetComponent(out Damageble damageble))
                 {
                     damageble.TakeDamage(Damage);
                 }

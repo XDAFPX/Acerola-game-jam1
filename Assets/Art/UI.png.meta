@@ -151,6 +151,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Button
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 444
+        width: 102
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 239aa493026e8194086816a39121a346
+      internalID: -883892317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -163,6 +184,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       AmmoIcon: 101422077
+      Button: -883892317
       Skull: -1430529799
       UI_1: -1437362270
       UI_2: 1489521978
