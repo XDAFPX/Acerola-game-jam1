@@ -18,7 +18,7 @@ public class Credits : MonoBehaviour
     {
         StartCoroutine(PrintString(0.2f,"Bloodshed has been stoped.Humanity is trully doomed",1));
         yield return new WaitForSeconds(12);
-        StartCoroutine(PrintString(0.1f, "YOU DID IT.YOU SURIVED IN WASTELAND", 2));
+        StartCoroutine(PrintString(0.1f, "YOU DID IT.YOU SURVIVED IN WASTELAND", 2));
         yield return new WaitForSeconds(7);
         StartCoroutine(PrintString(0.2f, "Thank you for playing.", 3));
         yield return new WaitForSeconds(4);
